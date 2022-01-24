@@ -1,0 +1,43 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "C/C++: g++.exe build active file",
+			"command": "D:\\msys32\\mingw64\\bin\\g++.exe",
+			"args": [
+				"-fdiagnostics-color=always",
+				"-g",
+				"${workspaceFolder}\\src\\*.cc",
+				"${workspaceFolder}\\src\\variants\\*.cc",
+				"${workspaceFolder}\\src\\objects\\*.cc",
+				"${workspaceFolder}\\src\\managers\\*.cc",
+				"-I${workspaceFolder}\\libs\\sfml\\include",
+				"-L${workspaceFolder}\\libs\\sfml\\bin",
+				"-I${workspaceFolder}\\libs\\box2d\\include",
+				"-L${workspaceFolder}\\libs\\box2d\\bin",
+				"-lsfml-graphics-2",
+				"-lsfml-window-2",
+				"-lsfml-system-2",
+				"-lsfml-audio-2",
+				"-lsfml-network-2",
+				"-l:libsfml-main.a",
+				"-llibbox2d",
+				"-o",
+				"${workspaceFolder}\\O2dT.exe",
+				"-O3"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "compiler: D:\\msys32\\mingw64\\bin\\g++.exe"
+		}
+	]
+}
