@@ -35,8 +35,6 @@ namespace o2dt
         isBox = true;
     }
 
-    PolygonGameObject::~PolygonGameObject() {}
-
     sf::Shape &PolygonGameObject::getBodyShape()
     {
         graphicalShape.setPointCount(shape.m_count);

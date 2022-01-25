@@ -5,6 +5,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "../managers/ResourceManager.h"
+#include "../managers/InputManager.h"
 #include "../objects/GameWorld.h"
 
 namespace o2dt
@@ -19,6 +20,7 @@ namespace o2dt
     private:
         std::unique_ptr<sf::RenderWindow> window;
         std::unique_ptr<o2dt::ResourceManager> resourceManager;
+        std::unique_ptr<o2dt::InputManager> inputManager;
         std::unique_ptr<o2dt::GameWorld> gameWorld;
 
         sf::Vector2u defaultSize = sf::Vector2u(1600, 900);

@@ -24,11 +24,9 @@ namespace o2dt
         const sf::Sprite &getSprite();
         virtual sf::Shape &getBodyShape() = 0;
 
-    private:
-        GameObject();
-
     protected:
         sf::Sprite sprite;
+        GameObject();
 
         // Physics members
         b2Body *body;

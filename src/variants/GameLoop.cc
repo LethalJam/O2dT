@@ -1,6 +1,7 @@
 #include "GameLoop.h"
 #include "../objects/PolygonGameObject.h"
 #include "../objects/CircleGameObject.h"
+#include "../objects/PlayerObject.h"
 #include <box2d/b2_world.h>
 #include <box2d/b2_body.h>
 #include <box2d/b2_polygon_shape.h>
@@ -13,7 +14,8 @@ namespace o2dt
     {
         window = std::make_unique<sf::RenderWindow>(sf::VideoMode(defaultSize.x, defaultSize.y), title);
         resourceManager = std::make_unique<o2dt::ResourceManager>();
-        gameWorld = std::make_unique<o2dt::GameWorld>(sf::Vector2f(0.0f, 100.0f));
+        inputManager = std::make_unique<o2dt::InputManager>();
+        gameWorld = std::make_unique<o2dt::GameWorld>(sf::Vector2f(0.0f, 0.0f), *inputManager.get());
     }
 
     GameLoop::~GameLoop()
@@ -22,15 +24,18 @@ namespace o2dt
 
     void GameLoop::start()
     {
-        sf::Texture zoggs = resourceManager->getTexture("Zoggs.png");
-        sf::Texture paprika = resourceManager->getTexture("Paprika.png");
         sf::Texture invis = resourceManager->getTexture("invis.png");
+        sf::Texture playerTex = resourceManager->getTexture("Gurret.png");
+
         std::unique_ptr<o2dt::PolygonGameObject> plane = std::make_unique<o2dt::PolygonGameObject>(invis, gameWorld->createBody(b2BodyType::b2_staticBody), 500.0f, 10.0f);
         plane->setPositionAndAngle(b2Vec2(window->getSize().x / 2, 700.0f), 0.5f);
 
-        gameWorld->transferGameObject(std::make_unique<PolygonGameObject>(zoggs, gameWorld->createBodyAt(b2BodyType::b2_dynamicBody, b2Vec2(0.0f, 0.0f))));
-        gameWorld->transferGameObject(std::make_unique<CircleGameObject>(paprika, gameWorld->createBodyAt(b2BodyType::b2_dynamicBody, b2Vec2(window->getSize().x / 2, 0.0f))));
+        gameWorld->transferGameObject(std::make_unique<CircleGameObject>(invis, gameWorld->createBodyAt(b2BodyType::b2_dynamicBody, b2Vec2(window->getSize().x / 2, 0.0f))));
         gameWorld->transferGameObject(std::move(plane));
+
+        std::unique_ptr<o2dt::PlayerObject> player = std::make_unique<o2dt::PlayerObject>(playerTex, gameWorld->createBody(b2BodyType::b2_dynamicBody));
+        player->setPositionAndAngle(b2Vec2(0.0f, 0.0f), 0.0f);
+        gameWorld->setPlayer(std::move(player));
 
         gameWorld->start();
         // run the program as long as the window is open
@@ -46,6 +51,7 @@ namespace o2dt
             }
 
             gameWorld->tick();
+
             // clear the window with black color
             window->clear(sf::Color::Black);
             gameWorld->draw(*window.get(), true);

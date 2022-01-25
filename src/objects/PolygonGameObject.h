@@ -12,11 +12,10 @@ namespace o2dt
     public:
         PolygonGameObject(const sf::Texture &texture, b2Body *body, float width, float height);
         PolygonGameObject(const sf::Texture &texture, b2Body *body);
-        ~PolygonGameObject();
 
         virtual sf::Shape &getBodyShape() override;
 
-    private:
+    protected:
         PolygonGameObject();
 
         bool isBox = false;

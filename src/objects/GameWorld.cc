@@ -2,7 +2,8 @@
 
 namespace o2dt
 {
-    GameWorld::GameWorld(sf::Vector2f gravity)
+    GameWorld::GameWorld(sf::Vector2f gravity, o2dt::InputManager &inputManager)
+        : inputManager(inputManager)
     {
         this->gravity = b2Vec2(gravity.x, gravity.y);
         worldSimulation = std::make_unique<b2World>(this->gravity);
@@ -17,8 +18,12 @@ namespace o2dt
     }
     void GameWorld::tick()
     {
-        deltaTime = deltaClock.restart();
-        worldSimulation->Step(deltaTime.asSeconds(), velocityIterations, positionIterations);
+        player->updateInput(inputManager.getInputData(InputContext::IN_GAME));
+        if (deltaClock.getElapsedTime().asSeconds() >= step)
+        {
+            worldSimulation->Step(step, velocityIterations, positionIterations);
+            deltaClock.restart();
+        }
     }
 
     b2Body *GameWorld::createBody(b2BodyDef &bodyDef)
@@ -29,6 +34,7 @@ namespace o2dt
     {
         bodyMold.type = bodyType;
         bodyMold.position.Set(0.0f, 0.0f);
+        bodyMold.linearDamping = globalFloorDamping;
         return worldSimulation->CreateBody(&bodyMold);
     }
     b2Body *GameWorld::createBodyAt(b2BodyType bodyType, b2Vec2 spawnPoint)
@@ -48,6 +54,10 @@ namespace o2dt
     {
         gameObjects.push_back(std::move(gameObject));
     }
+    void GameWorld::setPlayer(std::unique_ptr<PlayerObject> &&playerObject)
+    {
+        player = std::move(playerObject);
+    }
 
     void GameWorld::draw(sf::RenderWindow &window, bool debug)
     {
@@ -60,5 +70,7 @@ namespace o2dt
 
             window.draw(gameObjects.at(i)->getSprite());
         }
+
+        window.draw(player->getSprite());
     }
 }

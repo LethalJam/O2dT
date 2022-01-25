@@ -12,11 +12,10 @@ namespace o2dt
     public:
         CircleGameObject(const sf::Texture &texture, b2Body *body, float radius);
         CircleGameObject(const sf::Texture &texture, b2Body *body);
-        ~CircleGameObject();
 
         virtual sf::Shape &getBodyShape() override;
 
-    private:
+    protected:
         CircleGameObject();
 
         b2CircleShape shape;
