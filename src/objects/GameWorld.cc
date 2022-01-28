@@ -1,4 +1,5 @@
 #include "GameWorld.h"
+#include "../helpers/mathDefinitions.h"
 
 namespace o2dt
 {
@@ -41,6 +42,7 @@ namespace o2dt
     {
         bodyMold.type = bodyType;
         bodyMold.position = spawnPoint;
+        bodyMold.linearDamping = globalFloorDamping;
         return worldSimulation->CreateBody(&bodyMold);
     }
 
@@ -57,10 +59,25 @@ namespace o2dt
     void GameWorld::setPlayer(std::unique_ptr<PlayerObject> &&playerObject)
     {
         player = std::move(playerObject);
+        playerView = sf::View(player->getSprite().getPosition(), sf::Vector2f(1600, 900));
+        playerView.zoom(1.5f);
     }
 
     void GameWorld::draw(sf::RenderWindow &window, bool debug)
     {
+
+        sf::Vector2f source = playerView.getCenter();
+        sf::Vector2f target = player->getSprite().getPosition();
+
+        sf::Vector2f lerpedPos = MathDefinitions::lerp(source, target, lerpClock.getElapsedTime().asSeconds());
+        playerView.setCenter(lerpedPos);
+        if (target != source)
+        {
+            lerpClock.restart();
+        }
+
+        window.setView(playerView);
+
         for (int i = 0; i < gameObjects.size(); i++)
         {
             if (debug)

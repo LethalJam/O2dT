@@ -41,6 +41,7 @@ namespace o2dt
         int32 positionIterations = 4;
 
         sf::Clock deltaClock;
+        sf::Clock lerpClock;
         sf::Time deltaTime;
         float step = 1.0f / 120.0f;
         float globalFloorDamping = 0.33f;
@@ -49,6 +50,7 @@ namespace o2dt
         o2dt::InputManager &inputManager;
         std::vector<std::unique_ptr<GameObject>> gameObjects;
         std::unique_ptr<PlayerObject> player;
+        sf::View playerView;
     };
 }
 

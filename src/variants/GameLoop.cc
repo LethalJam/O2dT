@@ -25,12 +25,12 @@ namespace o2dt
     void GameLoop::start()
     {
         sf::Texture invis = resourceManager->getTexture("invis.png");
-        sf::Texture playerTex = resourceManager->getTexture("Gurret.png");
+        sf::Texture playerTex = resourceManager->getTexture("Gurret_Sheet.png");
 
         std::unique_ptr<o2dt::PolygonGameObject> plane = std::make_unique<o2dt::PolygonGameObject>(invis, gameWorld->createBody(b2BodyType::b2_staticBody), 500.0f, 10.0f);
         plane->setPositionAndAngle(b2Vec2(window->getSize().x / 2, 700.0f), 0.5f);
 
-        gameWorld->transferGameObject(std::make_unique<CircleGameObject>(invis, gameWorld->createBodyAt(b2BodyType::b2_dynamicBody, b2Vec2(window->getSize().x / 2, 0.0f))));
+        gameWorld->transferGameObject(std::make_unique<CircleGameObject>(invis, gameWorld->createBodyAt(b2BodyType::b2_dynamicBody, b2Vec2(window->getSize().x / 2, 500.0f))));
         gameWorld->transferGameObject(std::move(plane));
 
         std::unique_ptr<o2dt::PlayerObject> player = std::make_unique<o2dt::PlayerObject>(playerTex, gameWorld->createBody(b2BodyType::b2_dynamicBody));

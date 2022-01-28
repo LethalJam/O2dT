@@ -8,7 +8,8 @@ namespace o2dt
         inGameKeyMapping = {{"moveLeft", sf::Keyboard::A},
                             {"moveRight", sf::Keyboard::D},
                             {"moveUp", sf::Keyboard::W},
-                            {"moveDown", sf::Keyboard::S}};
+                            {"moveDown", sf::Keyboard::S},
+                            {"sprint", sf::Keyboard::LShift}};
     }
     InputManager::~InputManager() {}
 
