@@ -9,7 +9,8 @@ namespace o2dt
                             {"moveRight", sf::Keyboard::D},
                             {"moveUp", sf::Keyboard::W},
                             {"moveDown", sf::Keyboard::S},
-                            {"sprint", sf::Keyboard::LShift}};
+                            {"sprint", sf::Keyboard::LShift},
+                            {"sneak", sf::Keyboard::LControl}};
     }
     InputManager::~InputManager() {}
 

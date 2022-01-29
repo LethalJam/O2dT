@@ -16,6 +16,7 @@ namespace o2dt
         resourceManager = std::make_unique<o2dt::ResourceManager>();
         inputManager = std::make_unique<o2dt::InputManager>();
         gameWorld = std::make_unique<o2dt::GameWorld>(sf::Vector2f(0.0f, 0.0f), *inputManager.get());
+        window->setFramerateLimit(120);
     }
 
     GameLoop::~GameLoop()

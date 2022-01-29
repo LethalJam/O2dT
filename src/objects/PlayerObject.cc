@@ -14,8 +14,9 @@ namespace o2dt
     void PlayerObject::updateInput(std::vector<std::string> inputs)
     {
         latestInputs = inputs;
+        // pMovStatePrev = pMovState; // TODO: Remove maybe??
 
-        b2Vec2 vel;
+        b2Vec2 vel = b2Vec2(0.0f, 0.0f);
         if (inputContains("moveLeft"))
         {
             vel.x = -walkSpeed;
@@ -33,19 +34,59 @@ namespace o2dt
             vel.y = walkSpeed;
         }
 
-        if (inputContains("sprint"))
+        if (vel.LengthSquared() > 0.0f)
+        {
+            pMovState = MovementState::WALKING;
+        }
+        else
+        {
+            pMovState = MovementState::IDLE;
+        }
+
+        if (inputContains("sneak"))
+        {
+            vel *= (1.0f / sprintModifier);
+            animator.setAnimationSpeed(animationSpeed * (sprintModifier));
+            sf::Color c = sprite.getColor();
+            c.a = sf::Uint8(100);
+            sprite.setColor(c);
+            if (pMovState == MovementState::WALKING)
+            {
+                pMovState = MovementState::SNEAKING;
+            }
+        }
+        else if (inputContains("sprint"))
         {
             vel *= sprintModifier;
             animator.setAnimationSpeed(animationSpeed * (1.0f / sprintModifier));
+            sf::Color c = sprite.getColor();
+            c.a = sf::Uint8(255);
+            sprite.setColor(c);
+            if (pMovState == MovementState::WALKING)
+            {
+                pMovState = MovementState::SPRINTING;
+            }
         }
         else
         {
             animator.setAnimationSpeed(animationSpeed);
+            sf::Color c = sprite.getColor();
+            c.a = sf::Uint8(255);
+            sprite.setColor(c);
         }
         animate(vel);
 
         body->SetLinearVelocity(vel);
         body->SetTransform(body->GetPosition(), 0.0f);
+    }
+
+    const MovementState &PlayerObject::getMovementState()
+    {
+        return pMovState;
+    }
+    const PlayerState &PlayerObject::getPlayerState()
+    {
+        return pState;
     }
 
     bool PlayerObject::inputContains(std::string inputName)
@@ -72,6 +113,11 @@ namespace o2dt
         {
             sprite.setScale(sf::Vector2f(-1.0f, 1.0f));
             animator.setAnimation(sf::Vector2i(1, 0), sf::Vector2i(2, 0));
+        }
+
+        if (pMovState == MovementState::IDLE)
+        {
+            animator.setAnimation(sf::Vector2i(0, 0), sf::Vector2i(0, 0)); // Idle Frame
         }
     }
 }
